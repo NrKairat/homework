@@ -13,13 +13,31 @@ import java.util.Map;
  * Структура хранения пользователей выбрана HashMap.
  */
 public class PhoneBook {
-    HashMap<String,String> map = new HashMap<String,String>();
+    private HashMap<String,String> map = new HashMap<String,String>();
+    private InputStream inputStream = System.in;
+    private Reader inputStreamReader = new InputStreamReader(inputStream);
+    private BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    private Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
 
-    public static void main(String[] args) {
-
-    }
     public void addUser(String name, String email){  map.put(name,email);}
-    public void showAll(){System.out.println(map);}
+    public void showAll(){
+        Iterator it = map.entrySet().iterator();
+        int numberLine=0;
+        System.out.printf("%-25s%-25s%n","Имя","Адрес почты");
+        System.out.println("---------------------------------------------");
+        while (it.hasNext())
+        {
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) it.next();
+            numberLine++;
+            String a = ""+numberLine+":"+entry.getKey();
+            String b = entry.getValue();
+            System.out.printf("%-25s%-25s%n",a,b);
+
+        }
+    }
     public boolean editUser(String name, String email){
         if(map.containsKey(name)){
             map.remove(name);
@@ -31,7 +49,7 @@ public class PhoneBook {
     public void writeToByte() {
         ObjectOutputStream oos = null;
         try {
-            FileOutputStream fos = new FileOutputStream("C://D//byte.txt");
+            FileOutputStream fos = new FileOutputStream("byte.txt");
             oos = new ObjectOutputStream(fos);
             oos.writeObject(map);
         } catch (IOException e) {
@@ -47,18 +65,11 @@ public class PhoneBook {
         }
     }
     public void writeToJson(){
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-
-
-
         String usersJson = gson.toJson(map);
 
         try
         {
-            FileOutputStream fos=new FileOutputStream("C://D//note.txt");
+            FileOutputStream fos=new FileOutputStream("note.txt");
             // перевод строки в байты
             byte[] buffer = usersJson.getBytes();
 
@@ -70,10 +81,6 @@ public class PhoneBook {
         }
     }
     public void recoveryBook(){
-        InputStream inputStream = System.in;
-        Reader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
         HashMap<String,String> map1 =readByte();
         HashMap<String,String> map2 =readJson();
         String code ="";
@@ -113,6 +120,7 @@ public class PhoneBook {
         if(map.containsKey(name)){return true;}
         return false;
     }
+    public BufferedReader getBufferedReader(){return bufferedReader;}
     private HashMap<String,String> readByte(){
         ObjectInputStream ois = null;
         HashMap<String,String> u = null;
@@ -136,10 +144,7 @@ public class PhoneBook {
         return u;
     }
     private HashMap<String,String> readJson(){
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
+
 
         String name1="";
         try
