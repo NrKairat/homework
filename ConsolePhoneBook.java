@@ -25,12 +25,10 @@ public class ConsolePhoneBook {
         System.out.println("3 - Редактировать");
         System.out.println("4 - Выход");
 
-        InputStream inputStream = System.in;
-        Reader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        BufferedReader bufferedReader = pb.getBufferedReader();
         String code = "default";//читаем строку с клавиатуры
-        //Взаимодействие с пользователем, запрос нажатий клавиш
-        while(!code.equals("4")){
+
+        while(!code.equals("4")){ //Взаимодействие с пользователем, запрос нажатий клавиш
             code = bufferedReader.readLine();//Чтение команды пользователя
             if(code.equals("1")){
                 System.out.println("Введите имя");
